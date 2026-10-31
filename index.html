@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Echoes – The Offline Memory Keeper. Preserve your most precious memories, stories, and remembrances forever with local open-source AI.">
+  <meta name="theme-color" content="#050508">
+
+  <title>Echoes – The Offline Memory Keeper (Local AI Powered)</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/ofrenda-ghost.css">
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯</text></svg>">
+</head>
+<body>
+
+<!-- ============================================================
+     PARTICLE CANVAS
+     ============================================================ -->
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+<!-- ============================================================
+     GHOST MODE WISPS
+     ============================================================ -->
+<div class="ghost-wisps" aria-hidden="true"></div>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-logo" role="button" tabindex="0" aria-label="Go to home">
+    <div class="nav-logo-icon">🕯</div>
+    <span class="nav-logo-text">Echoes</span>
+  </div>
+
+  <div class="nav-links" role="list">
+    <button class="nav-link" data-section="vault" role="listitem">
+      <span class="nav-icon">🗝</span> Memory Vault
+    </button>
+    <button class="nav-link" data-section="storyteller" role="listitem">
+      <span class="nav-icon">✦</span> AI Storyteller
+    </button>
+    <button class="nav-link" data-section="companion" role="listitem">
+      <span class="nav-icon">🌙</span> Companion
+    </button>
+    <button class="nav-link" data-section="ofrenda" role="listitem">
+      <span class="nav-icon">🕯</span> Ofrenda
+    </button>
+    <button class="nav-link" data-section="privacy" role="listitem">
+      <span class="nav-icon">🔒</span> Privacy
+    </button>
+    <button class="nav-link" data-open-onboarding role="listitem" title="Interactive tour of the sanctuary">
+      <span class="nav-icon">✨</span> Guide
+    </button>
+  </div>
+
+  <div style="display:flex; align-items:center; gap: var(--space-2);">
+    <!-- Ambient Chimes Toggle -->
+    <button id="chime-toggle-btn" class="nav-chime-btn active" title="Toggle ambient audio chimes" aria-label="Toggle ambient chimes">
+      🔔 Chimes On
+    </button>
+
+    <!-- AI Connection Status Pill -->
+    <button id="ai-status-pill" class="ai-status-pill" title="Local AI Status. Click to configure." aria-label="Local AI Connection Status">
+      <span class="ai-status-dot offline"></span>
+      <span class="ai-status-text">Ollama: qwen2.5:3b</span>
+    </button>
+
+    <button class="nav-ghost-btn" aria-label="Enter Ghost Mode">
+      👻 Ghost Mode
+    </button>
+  </div>
+
+  <button class="nav-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="nav-mobile" role="list">
+  <div style="display:flex; align-items:center; justify-content:space-between; padding: 4px 12px 10px;">
+    <button id="mobile-ai-status-pill" class="ai-status-pill" aria-label="Local AI Connection Status">
+      <span class="ai-status-dot offline"></span>
+      <span class="ai-status-text">Ollama: qwen2.5:3b</span>
+    </button>
+    <button class="btn btn-ghost btn-sm" data-open-onboarding>✨ Tour Guide</button>
+  </div>
+  <button class="nav-link" data-section="vault" role="listitem">🗝 Memory Vault</button>
+  <button class="nav-link" data-section="storyteller" role="listitem">✦ AI Storyteller</button>
+  <button class="nav-link" data-section="companion" role="listitem">🌙 Companion</button>
+  <button class="nav-link" data-section="ofrenda" role="listitem">🕯 Digital Ofrenda</button>
+  <button class="nav-link" data-section="ghost" role="listitem">👻 Ghost Mode</button>
+  <button class="nav-link" data-section="privacy" role="listitem">🔒 Privacy</button>
+</div>
+
+<!-- ============================================================
+     APP CONTAINER
+     ============================================================ -->
+<div id="app">
+
+  <!-- ========================================================
+       SECTION 1: LANDING PAGE
+       ======================================================== -->
+  <section id="section-landing" class="page-section" aria-label="Welcome">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-spiderweb" aria-hidden="true"></div>
+
+      <!-- Floating decorations -->
+      <div class="hero-deco" aria-hidden="true">💀</div>
+      <div class="hero-deco" aria-hidden="true">🌹</div>
+      <div class="hero-deco" aria-hidden="true">🕷</div>
+      <div class="hero-deco" aria-hidden="true">🦇</div>
+      <div class="hero-deco" aria-hidden="true">🕸</div>
+      <div class="hero-deco" aria-hidden="true">🌙</div>
+
+      <!-- Glow orbs -->
+      <div class="glow-orb glow-orb-purple" style="width:600px;height:600px;top:-150px;left:-100px;" aria-hidden="true"></div>
+      <div class="glow-orb glow-orb-gold" style="width:400px;height:400px;bottom:-100px;right:-80px;" aria-hidden="true"></div>
+
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          Hacktoberfest 2026 · Local AI · Ghost in the Machine
+          <span class="hero-eyebrow-dot"></span>
+        </div>
+
+        <h1 class="hero-title">
+          <span class="hero-title-line1">Echoes</span>
+          <span class="hero-title-line2">The Offline Memory Keeper</span>
+        </h1>
+
+        <p class="hero-tagline">
+          Some memories deserve to <em>live forever.</em><br>
+          Preserved on your device with local, open-source AI.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-xl" id="hero-get-started" aria-label="Get Started — open Memory Vault">
+            🗝 Open the Vault
+          </button>
+          <button class="btn btn-gold btn-lg" id="hero-ofrenda-btn" aria-label="Create a remembrance">
+            🕯 Light a Candle
+          </button>
+          <button class="btn btn-ghost btn-lg" data-open-onboarding aria-label="Open sanctuary guide">
+            ✨ Take Sanctuary Tour
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-scroll-hint" aria-hidden="true">
+        <span>Discover more</span>
+        <div class="scroll-arrow"></div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="features-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">What Echoes Offers</span>
+          <h2 class="section-title text-gradient-royal">A sanctuary for what matters most</h2>
+          <p class="section-subtitle">Six sacred spaces to hold, honor, and transform your most precious memories — powered by local Ollama AI (Qwen2.5 3B) and stored privately on your device.</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card" data-nav="vault" tabindex="0" role="button" aria-label="Open Memory Vault">
+            <div class="feature-icon feature-icon-purple">🗝</div>
+            <h3 class="feature-title">Memory Vault</h3>
+            <p class="feature-desc">A beautifully designed space to store, search, and revisit your most precious memories. Organize by type, mood, tags, and export JSON backups.</p>
+            <span class="feature-link">Enter the vault →</span>
+          </div>
+
+          <div class="feature-card" data-nav="storyteller" tabindex="0" role="button" aria-label="Open AI Storyteller">
+            <div class="feature-icon feature-icon-gold">✦</div>
+            <h3 class="feature-title">AI Storyteller</h3>
+            <p class="feature-desc">Transform raw memories into emotional, nostalgic, poetic, or storytelling narratives with local Qwen2.5 3B and voice dictation.</p>
+            <span class="feature-link">Weave a story →</span>
+          </div>
+
+          <div class="feature-card" data-nav="companion" tabindex="0" role="button" aria-label="Open Memory Companion">
+            <div class="feature-icon feature-icon-ember">🌙</div>
+            <h3 class="feature-title">Memory Companion</h3>
+            <p class="feature-desc">Echo asks thoughtful follow-up questions to help you excavate and preserve subtle sensory details and unspoken moments.</p>
+            <span class="feature-link">Start a conversation →</span>
+          </div>
+
+          <div class="feature-card" data-nav="ofrenda" tabindex="0" role="button" aria-label="Open Digital Ofrenda">
+            <div class="feature-icon feature-icon-gold">🕯</div>
+            <h3 class="feature-title">Digital Ofrenda</h3>
+            <p class="feature-desc">Create remembrance cards with photos and AI-inscribed heartfelt dedication messages inspired by Día de los Muertos.</p>
+            <span class="feature-link">Build your altar →</span>
+          </div>
+
+          <div class="feature-card" data-nav="ghost" tabindex="0" role="button" aria-label="Enter Ghost Mode">
+            <div class="feature-icon feature-icon-purple">👻</div>
+            <h3 class="feature-title">Ghost Mode</h3>
+            <p class="feature-desc">An atmospheric visual experience for deep reflection. On Halloween night, the veil between worlds dissolves into glowing wisps.</p>
+            <span class="feature-link">Enter the other side →</span>
+          </div>
+
+          <div class="feature-card" data-nav="privacy" tabindex="0" role="button" aria-label="Open Privacy information">
+            <div class="feature-icon feature-icon-purple">🔒</div>
+            <h3 class="feature-title">100% Local Sovereign</h3>
+            <p class="feature-desc">Zero cloud AI. Zero external APIs. Local Ollama runs on your hardware, keeping your private memories on your device forever.</p>
+            <span class="feature-link">Learn how →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote Section -->
+    <div class="quote-section">
+      <div class="container">
+        <div class="quote-content">
+          <p class="quote-text">"The art of losing isn't hard to master… But it wasn't a disaster. It was the shape of a life, worn smooth by living."</p>
+          <p class="quote-source">— After Elizabeth Bishop</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ========================================================
+       SECTION 2: MEMORY VAULT
+       ======================================================== -->
+  <section id="section-vault" class="page-section vault-section" aria-label="Memory Vault">
+    <div class="container">
+
+      <div class="vault-header">
+        <div class="vault-title-group">
+          <h1 class="vault-title text-gradient-purple">Memory Vault</h1>
+          <p class="vault-subtitle">Every story you've ever lived, preserved and waiting.</p>
+        </div>
+
+        <div class="vault-stats">
+          <div class="stat-pill">
+            🗝 <span class="stat-pill-num" id="memory-count">0</span> memories
+            <span id="memory-filtered-count" style="font-size:11px; color:var(--purple-pale); margin-left:4px;"></span>
+          </div>
+          <button class="btn btn-primary" id="add-memory-btn" aria-label="Add a new memory">
+            ✦ Add Memory
+          </button>
+          <button class="btn btn-ghost btn-sm" id="vault-export-btn" title="Download complete JSON backup of your memories">
+            💾 Export
+          </button>
+          <button class="btn btn-ghost btn-sm" id="vault-import-btn" title="Import memories from JSON backup">
+            📥 Import
+          </button>
+          <input type="file" id="vault-import-input" accept=".json" class="hidden" aria-label="Upload JSON backup">
+        </div>
+      </div>
+
+      <!-- Active Tag Filter Bar -->
+      <div class="active-filters-bar" id="vault-active-filters"></div>
+
+      <!-- Toolbar -->
+      <div class="vault-toolbar">
+        <div class="search-box">
+          <span class="search-box-icon">⌕</span>
+          <input type="search" id="memory-search" placeholder="Search title, content, tags, moods…" aria-label="Search memories">
+          <button id="memory-search-clear" class="hidden" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--color-text-muted);" title="Clear search">✕</button>
+        </div>
+
+        <div class="vault-filter-controls">
+          <!-- Sort Selector -->
+          <select class="vault-sort-select" id="vault-sort-select" aria-label="Sort memories">
+            <option value="newest">🕒 Newest First</option>
+            <option value="oldest">⏳ Oldest First</option>
+            <option value="title-asc">🔤 Title (A–Z)</option>
+            <option value="mood">🎭 By Mood</option>
+          </select>
+
+          <!-- Mood Filter -->
+          <select class="vault-mood-select" id="vault-mood-filter" aria-label="Filter by mood">
+            <!-- Populated by JS -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Category / Type Filters -->
+      <div class="filter-group vault-type-filters" role="group" aria-label="Filter by category" style="margin-bottom: var(--space-6);">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="moment">✨ Moments</button>
+        <button class="filter-btn" data-filter="person">👤 People</button>
+        <button class="filter-btn" data-filter="place">🌍 Places</button>
+        <button class="filter-btn" data-filter="dream">🌙 Dreams</button>
+        <button class="filter-btn" data-filter="story">📖 Stories</button>
+      </div>
+
+      <!-- Memories Grid -->
+      <div class="memories-grid" id="memories-grid" role="list" aria-label="Your memories">
+        <!-- Populated by JS -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================
+       SECTION 3: AI STORYTELLER
+       ======================================================== -->
+  <section id="section-storyteller" class="page-section storyteller-section" aria-label="AI Storyteller">
+    <div class="container">
+
+      <div class="section-header">
+        <span class="section-tag">Local AI Storyteller</span>
+        <h1 class="section-title text-gradient-gold">Weave Your Memories Into Stories</h1>
+        <p class="section-subtitle">Describe a memory or pick one from your vault. Choose your tone. Let local open-source AI transform it into something permanent, heartfelt, and beautiful.</p>
+      </div>
+
+      <div class="storyteller-layout">
+
+        <!-- Input Panel -->
+        <div class="storyteller-input-panel">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 class="panel-title">
+              <div class="panel-title-icon">🖊</div>
+              Your Memory
+            </h2>
+            <div style="display:flex; align-items:center; gap: var(--space-2);">
+              <span class="ai-badge" id="storyteller-model-badge">qwen2.5:3b</span>
+              <button class="btn btn-ghost btn-sm" data-open-ai-guide title="Open local AI setup guide" style="padding: 2px 6px; font-size:10px;">Setup Guide</button>
+            </div>
+          </div>
+
+          <!-- Memory picker -->
+          <div class="form-group">
+            <label class="form-label" for="story-memory-picker">Pick from your vault</label>
+            <select class="memory-picker" id="story-memory-picker" aria-label="Pick a memory from vault">
+              <option value="">— Choose a saved memory —</option>
+            </select>
+          </div>
+
+          <!-- Text input with Voice Dictation -->
+          <div class="form-group" style="flex:1">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <label class="form-label" for="story-input">Describe your memory</label>
+              <button type="button" class="btn-voice" id="story-voice-btn" title="Click to dictate memory with your voice">
+                🎤
+              </button>
+            </div>
+            <textarea
+              class="storyteller-textarea"
+              id="story-input"
+              placeholder="Write about a person, a moment, a place, a feeling… Or click 🎤 to speak your thoughts aloud. The more sensory detail you share, the richer the story will be."
+              aria-label="Memory description"
+            ></textarea>
+          </div>
+
+          <!-- Tone selector (4 Tones: Emotional, Nostalgic, Poetic, Storytelling) -->
+          <div class="form-group">
+            <label class="form-label">Story Tone</label>
+            <div class="story-tone-selector" role="group" aria-label="Choose story tone">
+              <button type="button" class="story-tone-btn tone-btn" data-tone="emotional" aria-pressed="false">❤️ Emotional</button>
+              <button type="button" class="story-tone-btn tone-btn" data-tone="nostalgic" aria-pressed="false">🌅 Nostalgic</button>
+              <button type="button" class="story-tone-btn tone-btn active" data-tone="poetic" aria-pressed="true">🌸 Poetic</button>
+              <button type="button" class="story-tone-btn tone-btn" data-tone="storytelling" aria-pressed="false">📖 Storytelling</button>
+            </div>
+          </div>
+
+          <button class="btn btn-gold btn-lg w-full" id="story-generate-btn" aria-label="Generate story">
+            🕯 Generate Story
+          </button>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="storyteller-output-panel">
+          <h2 class="panel-title">
+            <div class="panel-title-icon">📜</div>
+            Your Story
+          </h2>
+
+          <div class="story-output" id="story-output">
+            <div class="story-placeholder">
+              <span class="story-placeholder-icon">🪔</span>
+              <p style="font-style:italic; color: var(--color-text-ghost); max-width: 260px; text-align: center;">
+                Share a memory on the left or click 🎤 to speak, and let local open-source AI transform it into something timeless.
+              </p>
+            </div>
+          </div>
+
+          <div class="story-actions hidden" id="story-actions">
+            <button class="btn btn-ghost btn-sm" id="story-copy-btn" aria-label="Copy story">📋 Copy</button>
+            <button class="btn btn-ghost btn-sm" id="story-save-btn" aria-label="Save story">💾 Save</button>
+            <button class="btn btn-ghost btn-sm" id="story-clear-btn" aria-label="Clear story">✕ Clear</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       SECTION 4: MEMORY COMPANION
+       ======================================================== -->
+  <section id="section-companion" class="page-section companion-section" aria-label="Memory Companion">
+    <div class="container">
+
+      <div class="section-header" style="margin-bottom: var(--space-6)">
+        <span class="section-tag">Memory Companion</span>
+        <h1 class="section-title text-gradient-purple">Speak With Echo</h1>
+        <p class="section-subtitle">An empathetic presence who listens and asks thoughtful follow-up questions to help you excavate and preserve the moments you never want to lose.</p>
+      </div>
+
+      <div class="companion-layout">
+
+        <!-- Sidebar -->
+        <aside class="companion-sidebar" aria-label="Companion profile and starters">
+          <div class="companion-profile">
+            <div class="companion-avatar" aria-label="Echo avatar">🌙</div>
+            <h2 class="companion-name">Echo</h2>
+            <p class="companion-role">Memory Companion</p>
+            <p class="companion-mood">"I am here to help you remember the quiet details."</p>
+          </div>
+
+          <!-- Companion Tone Selector -->
+          <div class="form-group" style="margin-bottom: var(--space-2);">
+            <label class="form-label" style="font-size: 11px;">Echo's Tone</label>
+            <div class="tone-selector-mini" role="group" aria-label="Companion tone">
+              <button type="button" class="companion-tone-btn tone-btn-mini active" data-tone="emotional">❤️ Emotional</button>
+              <button type="button" class="companion-tone-btn tone-btn-mini" data-tone="nostalgic">🌅 Nostalgic</button>
+              <button type="button" class="companion-tone-btn tone-btn-mini" data-tone="poetic">🌸 Poetic</button>
+              <button type="button" class="companion-tone-btn tone-btn-mini" data-tone="storytelling">📖 Storytelling</button>
+            </div>
+          </div>
+
+          <div class="conversation-starters">
+            <p class="starters-label">Begin with…</p>
+            <button class="starter-btn" data-starter="Tell me about someone you miss deeply.">Tell me about someone you miss deeply.</button>
+            <button class="starter-btn" data-starter="What's a memory you've never fully put into words?">A memory I've never put into words…</button>
+            <button class="starter-btn" data-starter="I had a dream I want to understand.">I had a dream I want to understand.</button>
+            <button class="starter-btn" data-starter="Tell me about a moment when everything changed.">A moment when everything changed…</button>
+            <button class="starter-btn" data-starter="Who taught you how to love?">Who taught you how to love?</button>
+            <button class="starter-btn" data-starter="I've been feeling a sense of grief lately.">I've been carrying grief lately…</button>
+          </div>
+        </aside>
+
+        <!-- Chat Window -->
+        <div class="chat-window" role="log" aria-label="Conversation with Echo" aria-live="polite">
+          <div class="chat-header">
+            <div class="chat-header-avatar" aria-hidden="true">🌙</div>
+            <div class="chat-header-info">
+              <h3 class="chat-header-name">Echo</h3>
+              <div class="chat-header-status">
+                <div class="status-dot"></div>
+                Present & listening
+              </div>
+            </div>
+            <span class="badge badge-purple" id="companion-model-badge">Local Ollama</span>
+          </div>
+
+          <div class="chat-messages" id="chat-messages" aria-label="Chat messages">
+            <!-- Populated by JS -->
+          </div>
+
+          <div class="chat-input-area">
+            <button type="button" class="btn-voice" id="chat-voice-btn" title="Click to speak your message to Echo" style="margin-right: 6px;">
+              🎤
+            </button>
+            <div class="chat-input-wrapper">
+              <textarea
+                class="chat-input"
+                id="chat-input"
+                placeholder="Share a memory, a feeling, a dream… Echo will ask follow-up questions."
+                rows="1"
+                aria-label="Type your message to Echo"
+              ></textarea>
+            </div>
+            <button class="chat-send-btn" id="chat-send-btn" aria-label="Send message">
+              ➤
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       SECTION 5: DIGITAL OFRENDA
+       ======================================================== -->
+  <section id="section-ofrenda" class="page-section ofrenda-section" aria-label="Digital Ofrenda">
+    <div class="container">
+
+      <!-- Altar Header -->
+      <div class="ofrenda-altar">
+        <!-- Candles -->
+        <div class="altar-candles" aria-hidden="true">
+          <div class="altar-candle"><div class="candle-flame"><div class="candle-glow"></div></div><div class="candle-body"></div></div>
+          <div class="altar-candle"><div class="candle-flame"><div class="candle-glow"></div></div><div class="candle-body"></div></div>
+          <div class="altar-candle"><div class="candle-flame"><div class="candle-glow"></div></div><div class="candle-body"></div></div>
+          <div class="altar-candle"><div class="candle-flame"><div class="candle-glow"></div></div><div class="candle-body"></div></div>
+          <div class="altar-candle"><div class="candle-flame"><div class="candle-glow"></div></div><div class="candle-body"></div></div>
+        </div>
+
+        <!-- Glow orbs for atmosphere -->
+        <div class="glow-orb glow-orb-gold" style="width:300px;height:150px;bottom:0;left:20%;opacity:0.08;" aria-hidden="true"></div>
+
+        <h1 class="altar-title">Digital Ofrenda</h1>
+        <p class="altar-subtitle">An altar of light for those who live on in our hearts.</p>
+
+        <div style="display:flex; justify-content:center;">
+          <button class="btn btn-gold btn-lg" id="add-ofrenda-btn" aria-label="Create a remembrance card">
+            🕯 Create Remembrance Card
+          </button>
+        </div>
+      </div>
+
+      <!-- Cards Grid -->
+      <div class="ofrenda-grid" id="ofrenda-grid" role="list" aria-label="Remembrance cards">
+        <!-- Populated by JS -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================
+       SECTION 6: GHOST MODE
+       ======================================================== -->
+  <section id="section-ghost" class="page-section ghost-section" aria-label="Ghost Mode">
+    <div class="container">
+
+      <!-- Glow orbs -->
+      <div class="glow-orb glow-orb-purple" style="width:500px;height:500px;top:0;left:50%;transform:translateX(-50%);opacity:0.1;" aria-hidden="true"></div>
+
+      <div class="ghost-intro">
+        <span class="section-tag" style="border-color: rgba(168,85,247,0.3); color: var(--purple-pale);">
+          👻 Veil Thinning — Oct 31
+        </span>
+        <h1 class="ghost-title">Ghost Mode</h1>
+        <p class="ghost-subtitle">Tonight the boundary between memory and presence dissolves. Enter, if you dare to remember.</p>
+
+        <div class="ghost-orb-wrapper">
+          <div class="ghost-orb" id="ghost-orb" role="button" tabindex="0" aria-label="Activate Ghost Mode">
+            👻
+          </div>
+        </div>
+
+        <div style="display:flex; gap: var(--space-3); justify-content: center; flex-wrap:wrap;">
+          <button class="btn btn-primary btn-lg" id="ghost-activate-btn" aria-label="Activate Ghost Mode">
+            👻 Activate Ghost Mode
+          </button>
+          <button class="btn btn-ghost btn-lg hidden" id="ghost-deactivate-btn" aria-label="Deactivate Ghost Mode">
+            ✕ Return to the Living
+          </button>
+        </div>
+      </div>
+
+      <!-- Ghost Messages -->
+      <div class="section-header" style="margin-top: var(--space-12)">
+        <span class="section-tag">Messages From Beyond</span>
+        <h2 class="section-title" style="font-size: var(--text-3xl);">What the Spirits Want You to Know</h2>
+      </div>
+
+      <div class="ghost-messages-grid" id="ghost-messages-grid">
+        <!-- Populated by JS -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================
+       SECTION 7: PRIVACY & SOVEREIGN DATA
+       ======================================================== -->
+  <section id="section-privacy" class="page-section privacy-section" aria-label="Privacy Information">
+    <div class="container">
+
+      <div class="privacy-hero">
+        <div class="privacy-shield" aria-hidden="true">🔒</div>
+        <span class="section-tag">Your Data, Your Device</span>
+        <h1 class="section-title text-gradient-purple">Absolute Privacy — By Design</h1>
+        <p class="section-subtitle">Echoes was built on an uncompromising principle: your memories belong to you and no one else. Local Ollama AI runs on your device; no memories ever touch external cloud servers.</p>
+      </div>
+
+      <div class="privacy-cards">
+        <div class="privacy-card">
+          <div class="privacy-card-icon">💻</div>
+          <h3 class="privacy-card-title">Local Ollama AI</h3>
+          <p class="privacy-card-desc">All AI processing (Qwen2.5 3B) occurs directly on your local hardware via Ollama. No OpenAI, Anthropic, or external API keys are ever used.</p>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-card-icon">🗄</div>
+          <h3 class="privacy-card-title">LocalStorage Only</h3>
+          <p class="privacy-card-desc">All data — memories, ofrenda cards, conversations, stories — is stored in your browser's LocalStorage. It lives on your device and stays there.</p>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-card-icon">💾</div>
+          <h3 class="privacy-card-title">JSON Export & Import</h3>
+          <p class="privacy-card-desc">Export your entire sanctuary to a clean JSON backup file at any time. Import it onto any browser or machine without vendor lock-in.</p>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-card-icon">🛡</div>
+          <h3 class="privacy-card-title">Graceful Offline Mode</h3>
+          <p class="privacy-card-desc">When Ollama is not running, Echoes seamlessly switches to an embedded offline pattern generator. The app never breaks and never begs for cloud credentials.</p>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-card-icon">👤</div>
+          <h3 class="privacy-card-title">Zero Accounts</h3>
+          <p class="privacy-card-desc">There is no registration, no login, no email address collected. Nothing to create. Nothing to give. Open Echoes and it's ready — just for you.</p>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-card-icon">📊</div>
+          <h3 class="privacy-card-title">Zero Analytics</h3>
+          <p class="privacy-card-desc">There is no tracking, no analytics, no telemetry. Echoes does not know how you use it, who you are, or what you remember. Only you know that.</p>
+        </div>
+      </div>
+
+      <!-- Backup and Quick Tools Card -->
+      <div style="margin-top: var(--space-8); padding: var(--space-6); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-2xl);">
+        <h2 style="font-family: var(--font-serif); font-size: var(--text-xl); margin-bottom: var(--space-2); color: var(--color-text-primary);">
+          Sanctuary Data Management
+        </h2>
+        <p style="color: var(--color-text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-4);">
+          Manage your sovereign memory vault. Create offline JSON backups, restore from an existing file, or revisit the setup guide.
+        </p>
+
+        <div style="display:flex; gap: var(--space-3); flex-wrap:wrap;">
+          <button class="btn btn-gold btn-sm" id="privacy-export-btn">
+            💾 Export Full Sanctuary Backup
+          </button>
+          <button class="btn btn-ghost btn-sm" id="privacy-import-btn">
+            📥 Import Backup (.json)
+          </button>
+          <button class="btn btn-ghost btn-sm" data-open-ai-guide>
+            🦙 Local AI Setup Guide
+          </button>
+          <button class="btn btn-ghost btn-sm" data-open-onboarding>
+            ✨ Retake Tour Guide
+          </button>
+        </div>
+      </div>
+
+      <!-- Tech Stack -->
+      <div class="privacy-tech-stack">
+        <h2 class="tech-stack-title">Open-Source & Transparent</h2>
+        <p style="color: var(--color-text-secondary); margin-bottom: var(--space-6);">
+          Echoes is built with open web standards and local open-source AI — no surveillance, no trackers, no secrets.
+        </p>
+        <div class="tech-badges">
+          <div class="tech-badge">🦙 Ollama Local Inference</div>
+          <div class="tech-badge">🧠 Qwen2.5 3B Default Model</div>
+          <div class="tech-badge">⚡ Express / Node.js Backend</div>
+          <div class="tech-badge">🎤 Web Speech API Dictation</div>
+          <div class="tech-badge">🔔 Web Audio Synthesizer</div>
+          <div class="tech-badge">🎨 Vanilla JS & CSS Tokens</div>
+          <div class="tech-badge">💾 LocalStorage API</div>
+          <div class="tech-badge">🌐 Works 100% Offline</div>
+          <div class="tech-badge">🔓 Zero Cloud AI Dependencies</div>
+        </div>
+
+        <div style="margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--color-border);">
+          <p style="color: var(--color-text-muted); font-size: var(--text-sm); margin-bottom: var(--space-4);">
+            Current storage usage: <strong id="storage-size" style="color: var(--purple-pale);">—</strong>
+          </p>
+          <button class="btn btn-danger btn-sm" id="clear-all-data-btn" aria-label="Clear all Echoes data">
+            ⚠ Clear All Data
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- #app -->
+
+<!-- ============================================================
+     TOAST CONTAINER
+     ============================================================ -->
+<div class="toast-container" aria-live="polite" aria-label="Notifications"></div>
+
+<!-- ============================================================
+     MODAL: ONBOARDING TOUR
+     ============================================================ -->
+<div class="modal-overlay" id="modal-onboarding" role="dialog" aria-modal="true" aria-labelledby="onboarding-modal-title">
+  <div class="modal" style="max-width: 580px;">
+    <div class="modal-header" style="margin-bottom: var(--space-4);">
+      <h2 class="modal-title" id="onboarding-modal-title" style="font-size: var(--text-xl);">✦ Welcome to Echoes</h2>
+      <button class="modal-close" data-close-modal="modal-onboarding" aria-label="Close guide">✕</button>
+    </div>
+
+    <div class="modal-body onboarding-container">
+      <!-- Slide 1: Welcome -->
+      <div class="onboarding-slide active" data-step="0">
+        <div class="onboarding-icon">🕯</div>
+        <h3 class="onboarding-title">Some memories deserve to live forever</h3>
+        <p class="onboarding-desc">
+          Echoes is your offline sanctuary inspired by Halloween and Día de los Muertos. Built to honor loved ones, preserve precious stories, and ensure your memories remain sovereign on your own device.
+        </p>
+      </div>
+
+      <!-- Slide 2: Sacred Spaces -->
+      <div class="onboarding-slide" data-step="1">
+        <div class="onboarding-icon">🗝</div>
+        <h3 class="onboarding-title">Five Sacred Spaces</h3>
+        <div class="onboarding-feature-list">
+          <div class="onboarding-feature-item">
+            <span>🗝</span>
+            <div><strong>Memory Vault</strong>Search, filter, categorize, and sort your life's moments.</div>
+          </div>
+          <div class="onboarding-feature-item">
+            <span>📜</span>
+            <div><strong>AI Storyteller</strong>Weave raw memories into emotional stories in 4 distinct tones.</div>
+          </div>
+          <div class="onboarding-feature-item">
+            <span>🌙</span>
+            <div><strong>Companion Echo</strong>Empathetic listener that asks thoughtful follow-up questions.</div>
+          </div>
+          <div class="onboarding-feature-item">
+            <span>🕯</span>
+            <div><strong>Digital Ofrenda</strong>Remembrance cards with photos and AI dedication inscriptions.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Local Sovereign AI -->
+      <div class="onboarding-slide" data-step="2">
+        <div class="onboarding-icon">🦙</div>
+        <h3 class="onboarding-title">100% Local Open-Source AI</h3>
+        <p class="onboarding-desc">
+          Powered by <strong>Ollama</strong> with <strong>Qwen2.5 3B</strong>. All intelligence runs directly on your CPU/GPU. No external AI APIs, no cloud accounts, and zero tracking. If Ollama is offline, a built-in offline engine handles everything seamlessly.
+        </p>
+      </div>
+
+      <!-- Slide 4: Voice & Backups -->
+      <div class="onboarding-slide" data-step="3">
+        <div class="onboarding-icon">🎤</div>
+        <h3 class="onboarding-title">Voice Dictation & JSON Backups</h3>
+        <p class="onboarding-desc">
+          Speak your memories naturally using browser Web Speech (click 🎤). Export your entire sanctuary as a JSON backup at any time. Your data, your control.
+        </p>
+      </div>
+
+      <!-- Step Indicator Dots -->
+      <div class="onboarding-dots">
+        <div class="onboarding-dot active" data-step="0"></div>
+        <div class="onboarding-dot" data-step="1"></div>
+        <div class="onboarding-dot" data-step="2"></div>
+        <div class="onboarding-dot" data-step="3"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+      <button class="btn btn-ghost btn-sm" id="onboarding-skip-btn">Skip Tour</button>
+      <div style="display:flex; gap: var(--space-2);">
+        <button class="btn btn-ghost btn-sm" id="onboarding-prev-btn" style="visibility:hidden;">← Back</button>
+        <button class="btn btn-primary btn-sm" id="onboarding-next-btn">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL: LOCAL AI SETUP GUIDE
+     ============================================================ -->
+<div class="modal-overlay" id="modal-ai-guide" role="dialog" aria-modal="true" aria-labelledby="ai-guide-modal-title">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-header">
+      <h2 class="modal-title" id="ai-guide-modal-title">🦙 Local AI Setup Guide (Ollama)</h2>
+      <button class="modal-close" data-close-modal="modal-ai-guide" aria-label="Close guide">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <p style="color: var(--color-text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-4);">
+        Echoes uses <strong>Ollama</strong> to run open-source language models like <strong>Qwen2.5 3B</strong> locally on your machine. Follow these 3 easy steps to activate local AI:
+      </p>
+
+      <div class="guide-step">
+        <div class="guide-step-num">1</div>
+        <div class="guide-step-body">
+          <h3 class="guide-step-title">Install Ollama</h3>
+          <p class="guide-step-text">Download and install the free open-source Ollama runtime for your OS from <a href="https://ollama.ai/download" target="_blank" rel="noopener">ollama.ai/download</a>.</p>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-num">2</div>
+        <div class="guide-step-body">
+          <h3 class="guide-step-title">Start Service & Pull Qwen2.5 3B</h3>
+          <p class="guide-step-text">Open your terminal and run these commands (click any command to copy):</p>
+          <div class="copyable-command" title="Click to copy command">
+            <span>ollama serve</span>
+            <span class="copy-hint">Copy</span>
+          </div>
+          <div class="copyable-command" title="Click to copy command">
+            <span>ollama run qwen2.5:3b</span>
+            <span class="copy-hint">Copy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-num">3</div>
+        <div class="guide-step-body">
+          <h3 class="guide-step-title">Start Echoes Server</h3>
+          <p class="guide-step-text">In your project root, start the local server:</p>
+          <div class="copyable-command" title="Click to copy command">
+            <span>npm start</span>
+            <span class="copy-hint">Copy</span>
+          </div>
+          <p class="guide-step-text" style="margin-top: var(--space-2); font-size:12px;">
+            The connection pill in the navbar will illuminate 🟢 green with <strong>Local: qwen2.5:3b</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Vercel Cloud Link Guide -->
+      <div class="guide-step" style="border-left: 2px dashed var(--gold-primary); padding-left: var(--space-3); margin-top: var(--space-2);">
+        <div class="guide-step-num" style="background: var(--gold-dark); color: #fff;">☁</div>
+        <div class="guide-step-body">
+          <h3 class="guide-step-title" style="color: var(--gold-light);">Using Echoes on Vercel?</h3>
+          <p class="guide-step-text">
+            On Vercel, the app runs out-of-the-box using the <strong>Built-in Offline Sanctuary Engine</strong>. To connect your laptop's local Ollama to the live Vercel deployment:
+          </p>
+          <div class="copyable-command" title="Click to copy command">
+            <span>cloudflared tunnel --url http://localhost:11434</span>
+            <span class="copy-hint">Copy</span>
+          </div>
+          <p class="guide-step-text" style="font-size:12px; margin-top: var(--space-1);">
+            Or with ngrok: <code>ngrok http 11434</code>. Then paste the generated <code>https://...</code> tunnel URL into <strong>AI Settings &rarr; Ollama Host URL</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Troubleshooting -->
+      <div style="padding: var(--space-3); background: rgba(10, 10, 18, 0.7); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: 12px; color: var(--color-text-secondary);">
+        <strong style="color: var(--gold-light);">💡 Performance Tip:</strong> Qwen2.5 3B only requires ~2.5GB of RAM/VRAM and delivers excellent literary prose. If you have a larger GPU, you can also pull <code>qwen2.5:7b</code> or <code>llama3.2</code> and select it in the AI Settings modal.
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close-modal="modal-ai-guide">Close</button>
+      <button class="btn btn-primary" id="open-ai-settings-from-guide-btn" onclick="document.getElementById('modal-ai-guide').classList.remove('open'); document.getElementById('ai-status-pill').click();">
+        ⚙ Open AI Settings
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL: AI MODEL & OLLAMA CONFIGURATION
+     ============================================================ -->
+<div class="modal-overlay" id="modal-ai-config" role="dialog" aria-modal="true" aria-labelledby="ai-config-modal-title">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <h2 class="modal-title" id="ai-config-modal-title">✦ Local Ollama AI Settings</h2>
+      <button class="modal-close" data-close-modal="modal-ai-config" aria-label="Close modal">✕</button>
+    </div>
+
+    <div class="modal-body ai-config-grid">
+      <!-- Status Card -->
+      <div class="ai-status-card" id="ai-modal-status-card">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <strong style="font-family: var(--font-serif); font-size: 14px;">Connection Status</strong>
+          <button class="btn btn-ghost btn-sm" id="ai-test-btn" style="padding: 3px 10px; font-size: 11px;">Test Connection</button>
+        </div>
+        <p id="ai-modal-status-text" style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; margin: 0;">
+          Checking local Ollama status...
+        </p>
+      </div>
+
+      <!-- Host URL -->
+      <div class="form-group">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
+          <label class="form-label" for="ai-host-input" style="margin-bottom:0;">Ollama Host URL</label>
+          <div style="display:flex; gap: 6px;">
+            <button type="button" class="btn btn-ghost btn-sm" id="ai-host-local-btn" style="padding: 2px 8px; font-size: 11px;">Default Localhost</button>
+          </div>
+        </div>
+        <input type="text" class="form-input" id="ai-host-input" value="http://127.0.0.1:11434" placeholder="http://127.0.0.1:11434 or https://tunnel.ngrok-free.app" autocomplete="off">
+        <span style="font-size: 11px; color: var(--color-text-muted); line-height: 1.4; display:block; margin-top: 4px;">
+          <strong>Local Mode:</strong> <code>http://127.0.0.1:11434</code> (for <code>npm start</code> on your PC).<br>
+          <strong>Vercel Cloud:</strong> Enter your secure tunnel (e.g. <code>https://&lt;id&gt;.trycloudflare.com</code> or <code>https://&lt;id&gt;.ngrok-free.app</code>), or use the built-in Offline Engine without any tunnel.
+        </span>
+      </div>
+
+      <!-- Installed Models Dropdown -->
+      <div class="form-group">
+        <label class="form-label" for="ai-model-select">Installed Models on Device</label>
+        <select class="form-input form-select" id="ai-model-select">
+          <option value="">— Select an installed model —</option>
+        </select>
+        <div class="model-pill-list" id="ai-available-models-list"></div>
+      </div>
+
+      <!-- Active Model Identifier -->
+      <div class="form-group">
+        <label class="form-label" for="ai-model-input">Active Model Identifier</label>
+        <input type="text" class="form-input" id="ai-model-input" value="qwen2.5:3b" placeholder="e.g. qwen2.5:3b, llama3.2, mistral" autocomplete="off">
+        <span style="font-size: 11px; color: var(--color-text-muted);">Default: <strong>qwen2.5:3b</strong> (ideal speed & quality balance for memory preservation).</span>
+      </div>
+
+      <!-- CLI quick commands -->
+      <div style="padding: var(--space-3); background: rgba(10, 10, 18, 0.7); border: 1px solid var(--color-border); border-radius: var(--radius-md);">
+        <span style="font-size: 11px; font-weight: 700; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.05em;">Terminal Setup Helper</span>
+        <code class="command-snippet copyable-command" title="Click to copy">ollama serve</code>
+        <code class="command-snippet copyable-command" title="Click to copy">ollama run qwen2.5:3b</code>
+      </div>
+
+      <!-- Privacy Guarantee -->
+      <div style="display:flex; align-items:flex-start; gap: var(--space-2); font-size: 12px; color: var(--color-text-secondary); background: rgba(0, 212, 170, 0.05); padding: var(--space-3); border-radius: var(--radius-md); border: 1px solid rgba(0, 212, 170, 0.2);">
+        <span style="font-size: 16px;">🔒</span>
+        <span><strong>100% On-Device Privacy:</strong> Your memories are kept strictly on this device. Ollama processes prompts locally. No third-party AI APIs are ever called.</span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close-modal="modal-ai-config">Close</button>
+      <button class="btn btn-primary" id="ai-save-config-btn">✦ Save Configuration</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL: ADD / EDIT MEMORY (WITH VOICE INPUT)
+     ============================================================ -->
+<div class="modal-overlay" id="modal-memory" role="dialog" aria-modal="true" aria-labelledby="memory-modal-title">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="memory-modal-title">✦ New Memory</h2>
+      <button class="modal-close" data-close-modal="modal-memory" aria-label="Close modal">✕</button>
+    </div>
+
+    <div class="modal-body" id="memory-form">
+      <!-- Type Selector -->
+      <div class="form-group">
+        <label class="form-label">Memory Category</label>
+        <div class="type-selector" role="group" aria-label="Select memory type">
+          <div class="type-option selected" data-type="moment" role="radio" tabindex="0" aria-checked="true">
+            <span class="type-option-icon">✨</span>
+            <span class="type-option-label">Moment</span>
+          </div>
+          <div class="type-option" data-type="person" role="radio" tabindex="0" aria-checked="false">
+            <span class="type-option-icon">👤</span>
+            <span class="type-option-label">Person</span>
+          </div>
+          <div class="type-option" data-type="place" role="radio" tabindex="0" aria-checked="false">
+            <span class="type-option-icon">🌍</span>
+            <span class="type-option-label">Place</span>
+          </div>
+          <div class="type-option" data-type="dream" role="radio" tabindex="0" aria-checked="false">
+            <span class="type-option-icon">🌙</span>
+            <span class="type-option-label">Dream</span>
+          </div>
+          <div class="type-option" data-type="story" role="radio" tabindex="0" aria-checked="false">
+            <span class="type-option-icon">📖</span>
+            <span class="type-option-label">Story</span>
+          </div>
+        </div>
+        <input type="hidden" id="memory-type-input" value="moment">
+      </div>
+
+      <!-- Title -->
+      <div class="form-group">
+        <label class="form-label" for="memory-title-input">Title *</label>
+        <input type="text" class="form-input" id="memory-title-input" placeholder="Give your memory a name…" maxlength="100" required autocomplete="off">
+      </div>
+
+      <!-- Content with Voice Dictation Button -->
+      <div class="form-group">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <label class="form-label" for="memory-content-input">Your Memory *</label>
+          <button type="button" class="btn-voice" id="memory-content-voice-btn" title="Click to dictate memory with your voice">
+            🎤
+          </button>
+        </div>
+        <textarea class="form-input form-textarea" id="memory-content-input" placeholder="Describe it in as much detail as you want. Or click 🎤 to speak your thoughts aloud." rows="6" aria-label="Memory content"></textarea>
+      </div>
+
+      <!-- Mood -->
+      <div class="form-group">
+        <label class="form-label" for="memory-mood-input">Mood / Feeling</label>
+        <select class="form-input form-select" id="memory-mood-input" aria-label="Select mood">
+          <!-- Populated by JS -->
+        </select>
+      </div>
+
+      <!-- Tags -->
+      <div class="form-group">
+        <label class="form-label" for="memory-tag-input">Tags</label>
+        <div class="favorites-input-group">
+          <input type="text" id="memory-tag-input" placeholder="e.g. family, summer, joy…" maxlength="30" aria-label="Add a tag">
+          <button type="button" class="btn btn-ghost btn-sm" id="add-tag-btn" aria-label="Add tag">+ Add</button>
+        </div>
+        <div class="favorites-chips" id="memory-tags-display" aria-label="Added tags"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close-modal="modal-memory">Cancel</button>
+      <button class="btn btn-primary" id="save-memory-btn">✦ Preserve Memory</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL: MEMORY DETAIL
+     ============================================================ -->
+<div class="modal-overlay" id="modal-memory-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-header">
+      <h2 class="modal-title" id="detail-title">Memory Title</h2>
+      <button class="modal-close" data-close-modal="modal-memory-detail" aria-label="Close">✕</button>
+    </div>
+
+    <div class="modal-body memory-detail">
+      <div class="memory-detail-meta">
+        <span class="memory-type-badge" id="detail-type" data-type="moment"></span>
+        <span class="memory-detail-date" id="detail-date"></span>
+      </div>
+      <p class="memory-detail-body" id="detail-body"></p>
+      <div class="favorites-chips" id="detail-tags"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" data-close-modal="modal-memory-detail">Close</button>
+      <button class="btn btn-ghost btn-sm" id="detail-story-btn">✦ Make into Story</button>
+      <button class="btn btn-primary btn-sm" id="detail-edit-btn">✎ Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL: ADD / EDIT OFRENDA CARD (WITH AI INSCRIPTION)
+     ============================================================ -->
+<div class="modal-overlay" id="modal-ofrenda" role="dialog" aria-modal="true" aria-labelledby="ofrenda-modal-title">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <h2 class="modal-title" id="ofrenda-modal-title">✦ Create Remembrance Card</h2>
+      <button class="modal-close" data-close-modal="modal-ofrenda" aria-label="Close modal">✕</button>
+    </div>
+
+    <div class="modal-body" id="ofrenda-form">
+
+      <!-- Photo Upload -->
+      <div class="form-group">
+        <label class="form-label">Photo (optional)</label>
+        <div class="photo-upload-area" id="photo-upload-area" role="button" tabindex="0" aria-label="Upload a photo">
+          <input type="file" id="ofrenda-photo-input" accept="image/*" class="photo-upload-input" aria-label="Choose photo file">
+          <span class="photo-upload-icon">📸</span>
+          <span class="photo-upload-text">Click to upload a photo<br>(under 2MB)</span>
+        </div>
+      </div>
+
+      <!-- Name -->
+      <div class="form-group">
+        <label class="form-label" for="ofrenda-name-input">Name *</label>
+        <input type="text" class="form-input" id="ofrenda-name-input" placeholder="Their full name…" maxlength="80" required autocomplete="off">
+      </div>
+
+      <!-- Emoji -->
+      <div class="form-group">
+        <label class="form-label" for="ofrenda-emoji-input">Symbol / Emoji</label>
+        <input type="text" class="form-input" id="ofrenda-emoji-input" placeholder="🕊 🌹 ⚓ 🐾" maxlength="4" autocomplete="off" style="font-size: 1.5rem;">
+      </div>
+
+      <!-- Years -->
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label" for="ofrenda-birth-input">Birth Year</label>
+          <input type="text" class="form-input" id="ofrenda-birth-input" placeholder="e.g. 1932" maxlength="4" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ofrenda-pass-input">Passed Year</label>
+          <input type="text" class="form-input" id="ofrenda-pass-input" placeholder="e.g. 2021" maxlength="4" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- Favorites -->
+      <div class="form-group">
+        <label class="form-label">Their Favorite Things</label>
+        <div class="favorites-input-group">
+          <input type="text" id="ofrenda-fav-input" placeholder="e.g. Sunday morning coffee, old records" maxlength="50" aria-label="Add a favorite thing">
+          <button type="button" class="btn btn-ghost btn-sm" id="ofrenda-add-fav-btn" aria-label="Add favorite thing">+ Add</button>
+        </div>
+        <div class="favorites-chips" id="ofrenda-favorites-chips" aria-label="Favorite things added"></div>
+      </div>
+
+      <!-- AI Remembrance Inscription Box -->
+      <div class="ofrenda-ai-box">
+        <div class="ofrenda-ai-header">
+          <span class="ofrenda-ai-title">✦ AI Remembrance Inscription</span>
+          <button type="button" class="btn btn-gold btn-sm" id="ofrenda-ai-generate-btn" style="padding: 4px 12px; font-size: 11px;">
+            ✦ Inscribe with AI
+          </button>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap: var(--space-2); flex-wrap:wrap;">
+          <span style="font-size: 11px; color: var(--color-text-muted);">Tone:</span>
+          <div class="tone-selector-mini" role="group" aria-label="Ofrenda tone">
+            <button type="button" class="ofrenda-tone-btn tone-btn-mini active" data-tone="emotional">❤️ Emotional</button>
+            <button type="button" class="ofrenda-tone-btn tone-btn-mini" data-tone="nostalgic">🌅 Nostalgic</button>
+            <button type="button" class="ofrenda-tone-btn tone-btn-mini" data-tone="poetic">🌸 Poetic</button>
+            <button type="button" class="ofrenda-tone-btn tone-btn-mini" data-tone="storytelling">📖 Storytelling</button>
+          </div>
+        </div>
+        <p style="font-size: 11px; color: var(--color-text-ghost); line-height: 1.4; margin: 0;">
+          Uses their name, dates, and beloved things to compose a heartfelt dedication via local AI.
+        </p>
+      </div>
+
+      <!-- Message -->
+      <div class="form-group">
+        <label class="form-label" for="ofrenda-message-input">Your Dedication Message</label>
+        <textarea class="form-input form-textarea" id="ofrenda-message-input" rows="4" placeholder="Write from the heart or click 'Inscribe with AI' above…" aria-label="Message to honor the person"></textarea>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close-modal="modal-ofrenda">Cancel</button>
+      <button class="btn btn-gold" id="save-ofrenda-btn">🕯 Light the Candle</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCRIPTS (ES Modules)
+     ============================================================ -->
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>

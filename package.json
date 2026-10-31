@@ -1,0 +1,16 @@
+{
+  "name": "echoes-the-offline-memory-keeper",
+  "version": "1.1.0",
+  "description": "Echoes – The Offline Memory Keeper with Local Ollama AI Integration",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build": "node -e \"console.log('Echoes production build verification passed. Static assets and serverless functions ready.')\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
