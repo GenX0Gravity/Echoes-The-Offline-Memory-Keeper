@@ -34,8 +34,8 @@ When memories are stored in traditional cloud services:
 
 ## 🌐 Live Demo & Preview
 
-- **Live Deployment URL**: `https://your-echoes-app.vercel.app` *(Replace with your deployed Vercel URL)*
-- **Source Code Repository**: `https://github.com/<your-username>/Echoes-The-Offline-Memory-Keeper` *(Replace with your GitHub repository)*
+- **Live Deployment URL**: [https://echoes-the-offline-memory-keeper.vercel.app](https://echoes-the-offline-memory-keeper.vercel.app)
+- **Source Code Repository**: [https://github.com/GenX0Gravity/Echoes-The-Offline-Memory-Keeper](https://github.com/GenX0Gravity/Echoes-The-Offline-Memory-Keeper)
 
 > **Note on AI Operation across Environments:**
 > - **When running locally (`npm start`)**: Communicates directly with your local Ollama instance (`http://127.0.0.1:11434`) and runs `qwen2.5:3b` completely offline.

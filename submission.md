@@ -32,7 +32,7 @@ Unlike mainstream memory and journaling applications that push personal reflecti
 
 ## Demo
 
-- **Live Web Application**: [https://your-echoes-app.vercel.app](https://your-echoes-app.vercel.app) *(Replace with your deployed Vercel URL)*
+- **Live Web Application**: [https://echoes-the-offline-memory-keeper.vercel.app](https://echoes-the-offline-memory-keeper.vercel.app)
 - **Local Application**: Clone the repository and run `npm start` to access `http://localhost:3000`.
 
 ### Visual Tour of the Sanctuary:
@@ -49,12 +49,12 @@ Unlike mainstream memory and journaling applications that push personal reflecti
 
 ## Code
 
-- **GitHub Repository**: [https://github.com/<your-username>/Echoes-The-Offline-Memory-Keeper](https://github.com/<your-username>/Echoes-The-Offline-Memory-Keeper) *(Replace with your GitHub repository URL)*
+- **GitHub Repository**: [https://github.com/GenX0Gravity/Echoes-The-Offline-Memory-Keeper](https://github.com/GenX0Gravity/Echoes-The-Offline-Memory-Keeper)
 - **License**: MIT Open Source License
 
 ```bash
 # Clone and explore
-git clone https://github.com/<your-username>/Echoes-The-Offline-Memory-Keeper.git
+git clone https://github.com/GenX0Gravity/Echoes-The-Offline-Memory-Keeper.git
 cd Echoes-The-Offline-Memory-Keeper
 npm install
 npm start

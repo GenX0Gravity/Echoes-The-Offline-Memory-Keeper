@@ -1,5 +1,5 @@
 /**
- * ECHOES – Express Backend Server
+ * ECHOES – Express Backend Server (Local Development)
  * Serves the vanilla web client and provides endpoints to local Ollama.
  * Strictly local inference; zero external AI APIs.
  */
@@ -8,11 +8,12 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { aiRouter } from './server/routes/ai.js';
-import { ollama } from './server/ollamaClient.js';
+import { aiRouter } from './routes/ai.js';
+import { ollama } from './ollamaClient.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,18 +26,18 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/api', aiRouter);
 
 // Serve static frontend assets from workspace root
-app.use(express.static(__dirname));
+app.use(express.static(rootDir));
 
 // Fallback for SPA navigation
 app.use((req, res, next) => {
   if (req.method === 'GET' && !req.path.startsWith('/api')) {
-    return res.sendFile(path.join(__dirname, 'index.html'));
+    return res.sendFile(path.join(rootDir, 'index.html'));
   }
   next();
 });
 
 // Start listening
-const server = app.listen(PORT, async () => {
+app.listen(PORT, async () => {
   console.log('------------------------------------------------------------');
   console.log(`🕯 Echoes – The Offline Memory Keeper is running!`);
   console.log(`✦ Web App:     http://localhost:${PORT}`);
@@ -44,7 +45,6 @@ const server = app.listen(PORT, async () => {
   console.log(`✦ Active Model: ${ollama.model} (default: Qwen2.5 3B)`);
   console.log('------------------------------------------------------------');
 
-  // Check Ollama status on startup
   const status = await ollama.getStatus();
   if (status.connected) {
     console.log(`✔ Connected to local Ollama (${status.availableModels.length} models installed)`);
@@ -57,5 +57,3 @@ const server = app.listen(PORT, async () => {
     console.log(`  To activate local AI: start Ollama with "ollama serve".`);
   }
 });
-
-export { app, server };
