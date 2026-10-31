@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node server/server.js",
-    "dev": "node --watch server/server.js",
-    "build": "node -e \"console.log('Echoes production build verification passed. Static assets and serverless functions ready.')\""
+    "dev": "node --watch server/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

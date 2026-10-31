@@ -14,6 +14,10 @@ export default async function handler(req, res) {
 
   const targetHost = req.headers['x-ollama-host'] || req.query.host || ollama.host;
   const status = await ollama.getStatus(targetHost);
-  return res.status(200).json(status);
+  return res.status(200).json({
+    ...status,
+    deployment: 'vercel-live',
+    version: '1.2.0',
+  });
 }
 
