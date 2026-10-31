@@ -12,7 +12,9 @@
 
 *A dark gothic memory archive and digital sanctuary inspired by Halloween and Día de los Muertos, powered by local open-source AI.*
 
-[Live Demo](#-live-demo--preview) • [Features](#-features) • [Local Installation](#-local-installation-guide) • [Vercel Deployment](#-deploying-to-vercel) • [Architecture](#-architecture--data-flow) • [Local AI Deep-Dive](#-how-open-source-ai-powers-echoes) • [Privacy Guarantees](#-privacy-advantages)
+*Built with reverence for the **[Hacktoberfest Open-Source AI Challenge Week 4: Ghost in the Machine](https://dev.to/challenges/hacktoberfest-week4-2026-10-26)**.*
+
+[Live Demo](#-live-demo--preview) • [DEV Submission Article](submission.md) • [Features](#-features) • [Local Installation](#-local-installation-guide) • [Vercel Deployment](#-deploying-to-vercel) • [Architecture](#-architecture--data-flow) • [Local AI Deep-Dive](#-how-open-source-ai-powers-echoes) • [Privacy Guarantees](#-privacy-advantages)
 
 </div>
 

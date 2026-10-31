@@ -57,3 +57,4 @@ app.listen(PORT, async () => {
     console.log(`  To activate local AI: start Ollama with "ollama serve".`);
   }
 });
+
